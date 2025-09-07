@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E‑Monde — Boutique</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS (inline pour la démo ; vous pouvez déplacer dans css/style.css) -->
+  <style>
+    :root{
+      --bg:#0f1115;          /* fond général sombre */
+      --card:#151923;        /* cartes */
+      --muted:#9aa3b2;       /* texte secondaire */
+      --line:#242938;        /* séparateurs */
+      --accent:#34d399;      /* vert accent */
+      --accent-600:#22c55e;
+      --accent-700:#16a34a;
+      --ghost:#1f2433;       /* boutons ghost */
+      --white:#f8fafc;
+    }
+
+    /* Reset + base */
+    html,body{background:var(--bg); color:var(--white);} 
+    a{color:var(--accent);} a:hover{color:var(--accent-600);} 
+    .text-muted{color:var(--muted)!important}
+
+    /* Header/Nav */
+    .navbar.bg-dark{
+      background:rgba(10,12,18,.9)!important;
+      -webkit-backdrop-filter:saturate(160%) blur(6px);
+      backdrop-filter:saturate(160%) blur(6px);
+    } 
+    .btn-ghost{background:var(--ghost); color:var(--white); border:1px solid var(--line);} 
+    .btn-ghost:hover{filter:brightness(1.1);} 
+    .btn-accent{background:var(--accent); color:#04110a; border:0; font-weight:600;} 
+    .btn-accent:hover{background:var(--accent-600); color:#04110a;}
+
+    /* Badges, puces */
+    .cart-badge{position:absolute; transform:translate(-6px,-10px); background:#ef4444; color:#fff; font-size:.7rem; padding:.15rem .35rem; border-radius:999px}
+    .chip{display:inline-block; padding:.35rem .7rem; border:1px solid var(--line); border-radius:999px; text-decoration:none; color:var(--white);} 
+    .chip:hover{background:var(--ghost);} 
+
+    /* Hero */
+    .hero{background:linear-gradient(180deg, #0b0e14 0%, #0f1115 100%);} 
+    .hero-sub{color:#cdd3df!important} 
+    .hero .form-control{background:#0c0f15; border:1px solid var(--line); color:var(--white);} 
+    .shadow-carousel{box-shadow:0 10px 35px rgba(0,0,0,.45);} 
+    .hero-img{aspect-ratio:16/9; object-fit:cover}
+
+    /* Cartes produits */
+    .card-dark{background:var(--card); border:1px solid var(--line); color:var(--white); border-radius:18px}
+    .card-media{background:#0e1117}
+    .badge-new,.badge-sale{position:absolute; top:10px; left:10px; font-size:.7rem; padding:.25rem .45rem; border-radius:999px}
+    .badge-new{background:#2563eb; color:#fff}
+    .badge-sale{background:#f59e0b; color:#1b1202; left:auto; right:10px}
+    .price{font-weight:700}
+
+    /* Sections alternées */
+    section.bg-light{background:#0c0f15!important;}
+
+    /* Footer */
+    footer.bg-dark{background:#0b0e14!important; border-top:1px solid var(--line)}
+    .developer-avatar{object-fit:cover; border:1px solid var(--line)}
+
+    /* Offcanvas sombre */
+    .offcanvas{background:var(--card); color:var(--white)}
+    .btn-close.btn-close-white{filter:invert(1)}
+
+    /* Témoignages */
+    #temoignages{background:linear-gradient(180deg, #0b0e14 0%, #0f1115 100%);} 
+    .temoignage-img{object-fit:cover; border:2px solid var(--line)}
+
+    /* Petites améliorations */
+    .form-select, .form-control{background:#0e1117; color:var(--white); border:1px solid var(--line)}
+    .form-select:focus, .form-control:focus{border-color:var(--accent); box-shadow:0 0 0 .25rem rgba(52,211,153,.15)}
+    .btn-outline-light{border-color:#2a3147; color:#e5e7eb}
+    .btn-outline-light:hover{background:#11182b;}
+    .btn-primary{background:#3b82f6; border:0}
+    .btn-primary:hover{background:#2563eb}
+    .btn-success{background:var(--accent-700); border:0}
+    .btn-success:hover{background:var(--accent-600)}
+
+    /* Utilitaires */
+    .divider{height:1px; background:var(--line); margin:1rem 0}
+    .w-25{width:25%!important}
+  </style>
+</head>
+<body>
+  <header class="sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+      <div class="container position-relative">
+        <a class="navbar-brand fw-bold" href="#home">E‑Monde</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"
+                aria-controls="navMain" aria-expanded="false" aria-label="Basculer la navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMain">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item"><a class="nav-link" href="#home">Accueil</a></li>
+            <li class="nav-item"><a class="nav-link" href="#catalogue">Catalogue</a></li>
+            <li class="nav-item"><a class="nav-link" href="#promotions">Promos</a></li>
+            <li class="nav-item"><a class="nav-link" href="#temoignages">Témoignages</a></li>
+            <li class="nav-item"><a class="nav-link" href="#livraison">Livraison</a></li>
+            <li class="nav-item"><a class="nav-link" href="#support">Support</a></li>
+            <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+          </ul>
+
+          <div class="d-flex align-items-center ms-3 position-relative">
+            <button class="btn btn-ghost me-2 d-none d-lg-inline position-relative" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart" type="button">
+              <i class="bi bi-cart-fill"></i>
+              <span id="cartCount" class="cart-badge">0</span>
+            </button>
+            <a class="btn btn-accent btn-buy" href="#cta">Commander</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main role="main">
+    <!-- HERO -->
+    <section id="home" class="hero py-5 bg-dark text-light">
+      <div class="container">
+        <div class="row gy-4 align-items-center">
+          <div class="col-lg-6">
+            <h1 class="hero-title display-5 fw-bold">Bienvenue chez E‑Monde</h1>
+            <p class="hero-sub lead text-muted">Produits sélectionnés, service premium et livraison rapide. Achetez en confiance.</p>
+
+            <form class="hero-search d-flex mt-4" role="search" action="#" method="get">
+              <input name="q" class="form-control" type="search" placeholder="Rechercher un produit..." aria-label="Recherche">
+              <button class="btn btn-accent ms-2" type="submit">Rechercher</button>
+            </form>
+
+            <div class="quick-cats mt-4 d-flex flex-wrap gap-2">
+              <a class="chip" href="#catalogue?cat=smartphones">Smartphones</a>
+              <a class="chip" href="#catalogue?cat=audio">Audio</a>
+              <a class="chip" href="#catalogue?cat=accessoires">Accessoires</a>
+              <a class="chip" href="#promotions">Promos</a>
+            </div>
+          </div>
+           
+          <div class="col-lg-6">
+            <div id="homeCarousel" class="carousel slide rounded-3 overflow-hidden shadow-carousel" data-bs-ride="carousel" aria-label="Carrousel de promotions">
+              <div class="carousel-inner">              <!-- ...existing code... -->
+
+              <!-- ...existing code... -->
+                <div class="carousel-item active">
+                  <img src="images/3d product design, 3d model, 3d render - Kens Studio.jpg" loading="lazy" class="d-block w-100 hero-img" alt="Nouvelle collection">
+                </div>
+                <div class="carousel-item">
+                  <img src="images/JBL Flip 6 - Fırat Tüzünkan.jpg" loading="lazy" class="d-block w-100 hero-img" alt="Offre spéciale">
+                </div>
+                <div class="carousel-item">
+                  <img src="images/télécharger (6).jpg" loading="lazy" class="d-block w-100 hero-img" alt="Livraison offerte">
+                </div>
+              </div>
+
+              <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Précédent</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Suivant</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <h6 class="text-uppercase text-muted small">Catégories</h6>
+          <div class="d-flex gap-2 flex-wrap">
+            <a class="btn btn-outline-light btn-sm" href="#catalogue?cat=smartphones">Smartphones</a>
+            <a class="btn btn-outline-light btn-sm" href="#catalogue?cat=tablettes">Tablettes</a>
+            <a class="btn btn-outline-light btn-sm" href="#catalogue?cat=audio">Audio</a>
+            <a class="btn btn-outline-light btn-sm" href="#catalogue?cat=accessoires">Accessoires</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATALOGUE -->
+    <section id="catalogue" class="py-5">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="h4">Catalogue & Produits</h2>
+
+          <form class="d-flex gap-2" role="search" onsubmit="return false;">
+            <select id="filterCategory" class="form-select form-select-sm" aria-label="Filtrer par catégorie">
+              <option value="">Toutes catégories</option>
+              <option value="smartphones">Smartphones</option>
+              <option value="audio">Audio</option>
+              <option value="accessoires">Accessoires</option>
+            </select>
+            <input id="filterPrice" type="search" class="form-control form-control-sm" placeholder="Max €" aria-label="Filtrer par prix">
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="applyFilters()">Appliquer</button>
+          </form>
+        </div>
+
+        <div class="row g-4" id="productList">
+          <!-- Produit 1 -->
+          <article class="col-12 col-sm-6 col-md-4 col-lg-3 product-card" data-cat="smartphones" data-price="1299">
+            <div class="card h-100 card-dark">
+              <div class="card-media position-relative">
+                <img src="./images/iphone 16 pro max.jpg" loading="lazy" class="card-img-top" alt="iPhone 16 Pro Max">
+                <span class="badge-new">Nouveau</span>
+                <span class="badge-sale">-1z5%</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">iPhone 16 Pro Max</h5>
+                <p class="card-text text-muted small">Performance et photo améliorée — disponible en plusieurs coloris.</p>
+
+                <div class="mb-2">
+                  <label class="small text-muted">Couleur</label>
+                  <div class="d-flex gap-1">
+                    <button type="button" class="btn btn-outline-secondary btn-sm">Noir</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm">Argent</button>
+                  </div>
+                </div>
+
+                <div class="mt-auto">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div><strong class="price">1 299 €</strong></div>
+                    <div class="text-muted small">En stock</div>
+                  </div>
+                  <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary" onclick="openProductModal('Accessoire design','images/iphone 16 pro max.jpg',49)">Voir</button>
+                    <button type="button" class="btn btn-outline-light" onclick="addToCart('iPhone 16 Pro Max',1299)">Ajouter au panier</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Produit 2 -->
+          <article class="col-12 col-sm-6 col-md-4 col-lg-3 product-card" data-cat="audio" data-price="199">
+            <div class="card h-100 card-dark">
+              <div class="card-media position-relative">
+                <img src="./images/3d product design, 3d model, 3d render - Kens Studio.jpg" loading="lazy" class="card-img-top" alt="Casque Audio">
+                <span class="badge-new">Top</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Casque Audio Pro</h5>
+                <p class="card-text text-muted small">Son immersif et confort longue durée.</p>
+                <div class="mt-auto">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="price">199 €</div>
+                    <div class="stock text-muted small">En stock</div>
+                  </div>
+                  <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary" onclick="openProductModal('Accessoire design','/images/3d product design, 3d model, 3d render - Kens Studio.jpg',199)">Voir</button>
+                    <button class="btn btn-outline-light" onclick="addToCart('Casque Audio Pro',199)">Ajouter</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Produit 3 -->
+          <article class="col-12 col-sm-6 col-md-4 col-lg-3 product-card" data-cat="accessoires" data-price="49">
+            <div class="card h-100 card-dark">
+              <div class="card-media position-relative">
+                <img src="images/JBL Flip 6 - Fırat Tüzünkan.jpg" loading="lazy" class="card-img-top" alt="Accessoire design">
+              </div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">JBL Flip 6</h5>
+                <p class="card-text text-muted small">Système à 2 voies : woofer + tweeter + radiateurs passifs pour des basses profondes.</p>
+                <div class="mt-auto">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="price">399 €</div>
+                    <div class="stock text-muted small">Derniers</div>
+                  </div>
+                  <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary" onclick="openProductModal('Accessoire design','images/JBL Flip 6 - Fırat Tüzünkan.jpg',49)">Voir</button>
+                    <button type="button" class="btn btn-outline-light" onclick="addToCart('Accessoire design',49)">Ajouter</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Produit 4 -->
+          <article class="col-12 col-sm-6 col-md-4 col-lg-3 product-card" data-cat="audio" data-price="1899">
+            <div class="card h-100 card-dark">
+              <div class="card-media position-relative">
+                <img src="images/b9d0e423-fe85-402a-8892-ae2b8c57411b.jpg" loading="lazy" class="card-img-top" alt="Pack Élégance">
+                <span class="badge-sale">Pack</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Pack Élégance</h5>
+                <p class="card-text text-muted small">iPad + AirPods + Pencil — parfait pour créatifs.</p>
+                <div class="mt-auto">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="price">1 899 €</div>
+                    <div class="stock text-muted small">En stock</div>
+                  </div>
+                  <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary" onclick="openProductModal('Pack Élégance','images/b9d0e423-fe85-402a-8892-ae2b8c57411b.jpg',1899)">Voir</button>
+                    <button type="button" class="btn btn-outline-light" onclick="addToCart('Pack Élégance',1899)">Ajouter</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANIER (offcanvas) -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+      <div class="offcanvas-header">
+        <h5 id="offcanvasCartLabel">Panier</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column">
+        <div id="cartItems" class="mb-3">
+          <p class="text-muted">Votre panier est vide.</p>
+        </div>
+
+        <div class="mt-auto">
+          <div class="d-flex justify-content-between mb-2">
+            <strong>Total</strong>
+            <strong id="cartTotal">0 €</strong>
+          </div>
+          <a href="#checkout" class="btn btn-success w-100 mb-2" data-bs-dismiss="offcanvas">Passer au paiement</a>
+          <button type="button" class="btn btn-outline-secondary w-100" data-bs-dismiss="offcanvas">Continuer les achats</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKOUT -->
+    <section id="checkout" class="py-5 bg-light">
+      <div class="container">
+        <h2 class="h4 mb-3">Paiement sécurisé</h2>
+        <div class="row">
+          <div class="col-lg-6">
+            <form id="checkoutForm" onsubmit="submitCheckout(event)">
+              <div class="mb-2">
+                <label class="form-label">Email</label>
+                <input id="checkoutEmail" type="email" class="form-control" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Adresse de livraison</label>
+                <input id="checkoutAddress" type="text" class="form-control" required>
+              </div>
+              
+              <div class="mb-2">
+                <label class="form-label">Ville</label>
+                <input id="checkoutCity" type="text" class="form-control" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Code postal</label>
+                <input id="checkoutZip" type="text" class="form-control" required>
+              </div>
+
+              <div class="mb-3 mt-3">
+                <label class="form-label">Méthode de paiement</label>
+                <select id="checkoutMethod" class="form-select">
+                  <option>Paiement Par</option>
+                  <option>Devfundme</option>
+                  <option>Natcash</option>
+                  <option>PayPal</option>
+                  
+                </select>
+              </div>
+
+               <div class="mt-3">
+                 <a id="natcashLink" href="https://natcash.com/payer" target="_blank" class="btn btn-success w-100 mb-2" style="display:none;">
+              Payer avec Natcash
+             </a>
+               <a id="paypalLink" href="https://www.paypal.com/paypalme/toncompte" target="_blank" class="btn btn-primary w-100 mb-2" style="display:none;">
+              Payer avec PayPal
+             </a>
+               <a id="DevfundmeLink" href="https://devfundme.com/fr/pms/336cbff9-2eae-4007-a5ba-0a1a9f4e8eb6/checkout/" target="_blank" class="btn btn-primary w-100 mb-2" style="display:none;">
+              Payer avec Devfundme
+              </a>
+            </div>
+
+             
+          <aside class="col-lg-6">
+            <div class="card p-3 card-dark">
+              <h6 class="mb-3">Récapitulatif</h6>
+              <div id="checkoutSummary" class="text-muted">Aucun article pour le moment.</div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPTE CLIENT -->
+    <section id="compte" class="py-5">
+      <div class="container">
+        <h2 class="h4 mb-3">Compte client</h2>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card card-dark p-3">
+              <h6>Connexion / Inscription</h6>
+              <p class="text-muted small mb-2">Connexion rapide ou achat en invité.</p>
+              <a class="btn btn-outline-light btn-sm" href="#">Se connecter</a>
+              <a class="btn btn-success btn-sm ms-2" href="#">Créer un compte</a>
+            </div>
+          </div>
+
+          <div class="col-md-8">
+            <div class="card card-dark p-3">
+              <h6>Historique des commandes</h6>
+              <p class="text-muted small">Aucune commande pour le moment (démo).</p>
+              <div class="mt-3">
+                <h6 class="mb-2">Avis & évaluations</h6>
+                <p class="text-muted small">Les clients peuvent laisser des avis sur chaque fiche produit.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVRAISON -->
+    <section id="livraison" class="py-5 bg-light">
+      <div class="container">
+        <h2 class="h4 mb-3">Options de livraison</h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="card p-3 card-dark">
+              <h6>Méthodes</h6>
+              <ul class="list-unstyled small text-muted mb-0">
+                <li>Standard (2–5 jours)</li>
+                <li>Express (24–48h)</li>
+                <li>Retrait en magasin</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card p-3 card-dark">
+              <h6>Calculateur de frais</h6>
+              <form onsubmit="calculateShipping(event)">
+                <div class="row g-2">
+                  <div class="col-7">
+                    <input type="text" id="shipCity" class="form-control" placeholder="Ville">
+                  </div>
+                  <div class="col-5">
+                    <input type="text" id="shipCountry" class="form-control" placeholder="Pays">
+                  </div>
+                </div>
+                <div class="mt-2">
+                  <button type="submit" class="btn btn-outline-light btn-sm">Calculer</button>
+                  <div id="shipResult" class="mt-2 text-muted small"></div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROMOTIONS & NEWSLETTER -->
+    <section id="promotions" class="py-5">
+      <div class="container">
+        <h2 class="h4 mb-3">Promotions & codes</h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="card p-3 card-dark">
+              <h6>Entrer un code promo</h6>
+              <div class="d-flex gap-2">
+                <input id="couponCode" class="form-control form-control-sm" placeholder="CODE2025">
+                <button type="button" class="btn btn-success btn-sm" onclick="applyCoupon()">Appliquer</button>
+              </div>
+              <div id="couponResult" class="mt-2 small text-muted"></div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+          <div class="col-md-6">
+            <div class="card p-3 card-dark">
+              <h6>Formulaire de contact</h6>
+              <form onsubmit="contactSubmit(event)">
+                <div class="mb-2">
+                  <input id="contactName" class="form-control form-control-sm" placeholder="Votre nom" required>
+                </div>
+                <div class="mb-2">
+                  <input id="contactMail" class="form-control form-control-sm" type="email" placeholder="Email" required>
+                </div>
+                <div class="mb-2">
+                  <textarea id="contactMsg" class="form-control form-control-sm" rows="2" placeholder="Votre message" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-outline-light btn-sm">Envoyer</button>
+                <div id="contactResult" class="mt-2 small text-muted"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SÉCURITÉ / SEO / MOBILE -->
+    <section id="securite" class="py-5">
+      <div class="container">
+        <h2 class="h4 mb-3">Sécurité</h2>
+        <div class="card p-3 card-dark">
+          <p class="text-muted small mb-0">Utilisez HTTPS (SSL/TLS) en production. Intégrer des paiements via des prestataires sécurisés (Stripe, PayPal). Respecter la RGPD pour les données clients.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="seo" class="py-5 bg-light">
+      <div class="container">
+        <h2 class="h4 mb-3">SEO & Marketing</h2>
+        <div class="card p-3 card-dark">
+          <p class="text-muted small mb-0">URLs propres, meta tags, balisage sémantique, blog intégré, partage social et suivi analytics.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="mobile" class="py-5">
+      <div class="container">
+        <h2 class="h4 mb-3">Mobile & Performance</h2>
+        <div class="card p-3 card-dark">
+          <p class="text-muted small mb-0">Images optimisées, lazy-loading, minification assets et mise en cache. Testez sur Lighthouse pour améliorer les scores.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="extras" class="py-5 bg-light">
+      <div class="container">
+        <h2 class="h4 mb-3">Extras utiles</h2>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="card p-3 card-dark">
+              <h6>Wishlist</h6>
+              <p class="text-muted small mb-0">Ajouter aux favoris pour enregistrer plus tard.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 card-dark">
+              <h6>Comparateur</h6>
+              <p class="text-muted small mb-0">Comparer caractéristiques et prix côte à côte.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 card-dark">
+              <h6>Recommandations</h6>
+              <p class="text-muted small mb-0">Suggestions basées sur l'activité des clients.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÉMOIGNAGES -->
+    <section id="temoignages" class="py-5 bg-dark text-light">
+      <div class="container">
+        <h2 class="h4 mb-4">Témoignages</h2>
+
+        <div class="row g-4">
+          <div class="col-12 col-md-4">
+            <div class="card card-dark p-3 text-center">
+              <img src="images/tem 3.jpg" alt="Client 1" class="temoignage-img rounded-circle mb-3" width="96" height="96">
+              <p class="mb-1 fw-bold">Marie D.</p>
+              <p class="small text-muted mb-0">"Service impeccable et livraison rapide."</p>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <div class="card card-dark p-3 text-center">
+              <img src="images/tem 4.jpg" alt="Client 2" class="temoignage-img rounded-circle mb-3" width="96" height="96">
+              <p class="mb-1 fw-bold">Antoine R.</p>
+              <p class="small text-muted mb-0">"Produit conforme, très satisfait."</p>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <div class="card card-dark p-3 text-center">
+              <img src="images/tem 1.jpg" alt="Client 3" class="temoignage-img rounded-circle mb-3" width="96" height="96">
+              <p class="mb-1 fw-bold">Alexandre E.</p>
+              <p class="small text-muted mb-0">"Design agréable, navigation fluide."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="py-4 bg-dark text-light">
+    <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between small gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <img src="images/moi.jpg" alt="Bayon - Développeur" class="developer-avatar rounded-circle" width="48" height="48">
+        <div>
+          <p class="mb-0"><strong>Contact :</strong> <a href="mailto:contact@emonde.com" class="link-success">contact@emonde.com</a></p>
+          <p class="mb-0">Développé par <a href="https://github.com/bayon" class="link-success">Bayon</a></p>
+        </div>
+      </div>
+
+      <div>
+        <p class="mb-0">&copy; <span id="year"></span> E‑Monde</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PRODUCT MODAL -->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content card-dark">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productModalTitle">Produit</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <img id="productModalImg" src="images/product1.jpg" loading="lazy" class="img-fluid rounded" alt="Visuel produit">
+            </div>
+            <div class="col-md-6">
+              <p id="productModalDesc" class="text-muted">Description produit.</p>
+              <p class="fw-bold text-success" id="productModalPrice">0 €</p>
+              <div class="mb-3">
+                <label class="form-label small">Quantité</label>
+                <input id="productQty" type="number" min="1" value="1" class="form-control form-control-sm w-25">
+              </div>
+              <div class="d-grid gap-2">
+                <button type="button" class="btn btn-success" onclick="addModalToCart()">Ajouter au panier</button>
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Fermer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOTSTRAP JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- SCRIPTS FRONT (démo) -->
+  <script>
+    // Année footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Panier en mémoire (démo)
+    const cart = [];
+
+    function addToCart(name, price){
+      const idx = cart.findIndex(i => i.name === name);
+      if(idx >= 0){ cart[idx].qty += 1; }
+      else { cart.push({name, price, qty:1}); }
+      updateCartUI();
+    }
+
+    function updateCartUI(){
+      const cartItems = document.getElementById('cartItems');
+      const cartTotal = document.getElementById('cartTotal');
+      const cartCount = document.getElementById('cartCount');
+      if(!cartItems) return;
+      if(cart.length === 0){
+        cartItems.innerHTML = '<p class="text-muted">Votre panier est vide.</p>';
+      } else {
+        cartItems.innerHTML = cart.map((it, i)=>`
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <div class="small">${it.name}</div>
+              <div class="text-muted small">Qty: ${it.qty}</div>
+            </div>
+            <div class="text-end">
+              <div class="fw-bold">${it.price} €</div>
+              <button class="btn btn-sm btn-link text-danger p-0 ms-2" onclick="removeFromCart(${i})">Supprimer</button>
+            </div>
+          </div>
+        `).join('');
+      }
+      const total = cart.reduce((s,it)=>s+it.price*it.qty,0);
+      cartTotal.textContent = total + ' €';
+      if(cartCount) cartCount.textContent = cart.reduce((s,it)=>s+it.qty,0);
+      const summary = document.getElementById('checkoutSummary');
+      if(summary) summary.textContent = cart.length ? cart.map(it=>`${it.name} ×${it.qty} — ${it.price}€`).join(', ') : 'Aucun article pour le moment.';
+    }
+
+    function removeFromCart(index){ cart.splice(index,1); updateCartUI(); }
+
+    // Modal produit
+    function openProductModal(title,img,price){
+      document.getElementById('productModalTitle').textContent = title;
+      document.getElementById('productModalImg').src = img;
+      document.getElementById('productModalPrice').textContent = price + ' €';
+      const modal = new bootstrap.Modal(document.getElementById('productModal'));
+      modal.show();
+      window._currentModalProduct = {title,price,img};
+    }
+
+    function addModalToCart(){
+      const p = window._currentModalProduct;
+      const qty = Number(document.getElementById('productQty').value || 1);
+      if(p){
+        const idx = cart.findIndex(i => i.name === p.title);
+        if(idx >= 0){ cart[idx].qty += qty; }
+        else { cart.push({name: p.title, price: p.price, qty}); }
+        updateCartUI();
+        const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+        if(modal) modal.hide();
+      }
+    }
+
+    // Filtres catalogue
+    function applyFilters(){
+      const cat = document.getElementById('filterCategory').value;
+      const maxStr = document.getElementById('filterPrice').value.trim().replace(/\s/g,'');
+      const max = maxStr ? parseFloat(maxStr.replace(',','.')) : null;
+      const cards = document.querySelectorAll('#productList .product-card');
+      cards.forEach(card =>{
+        const c = card.getAttribute('data-cat');
+        const p = parseFloat(card.getAttribute('data-price'));
+        const okCat = !cat || c === cat;
+        const okPrice = max===null || (!isNaN(p) && p <= max);
+        card.style.display = (okCat && okPrice) ? '' : 'none';
+      });
+    }
+
+    // Checkout (démo)
+    function submitCheckout(e){
+      e.preventDefault();
+      if(cart.length === 0){ alert('Votre panier est vide.'); return; }
+      const email = document.getElementById('checkoutEmail').value;
+      const address = document.getElementById('checkoutAddress').value;
+      const city = document.getElementById('checkoutCity').value;
+      const zip = document.getElementById('checkoutZip').value;
+      const method = document.getElementById('checkoutMethod').value;
+      // Ici, vous enverriez ces données à votre back-end / prestataire de paiement
+      alert(`Merci ${email}!\nCommande confirmée. Expédition à ${address}, ${city} ${zip}.\nPaiement: ${method}.`);
+      cart.length = 0; // vider
+      updateCartUI();
+      document.getElementById('checkoutForm').reset();
+    }
+
+    // Calcul des frais de livraison (démo)
+    function calculateShipping(e){
+      e.preventDefault();
+      const country = (document.getElementById('shipCountry').value || '').trim().toLowerCase();
+      let fee = 9.9; // base
+      if(country === 'haïti' || country === 'haiti') fee = 4.9;
+      if(country === 'france') fee = 7.9;
+      if(country === 'usa' || country === 'états-unis' || country === 'etats-unis') fee = 12.9;
+      document.getElementById('shipResult').textContent = `Frais estimés: ${fee.toFixed(2)} € (démo)`;
+    }
+
+    // Coupon (démo)
+    let coupon = null; // {code, rate}
+    function applyCoupon(){
+      const code = (document.getElementById('couponCode').value || '').trim().toUpperCase();
+      if(!code){ document.getElementById('couponResult').textContent = 'Entrez un code.'; return; }
+      const valid = { 'CODE2025': 0.10, 'WELCOME': 0.05 };
+      if(valid[code]){
+        coupon = {code, rate: valid[code]};
+        document.getElementById('couponResult').textContent = `Code ${code} appliqué (−${Math.round(valid[code]*100)}%).`;
+      }else{
+        coupon = null;
+        document.getElementById('couponResult').textContent = 'Code invalide.';
+      }
+      recalcTotalWithCoupon();
+    }
+
+    function recalcTotalWithCoupon(){
+      const base = cart.reduce((s,it)=>s+it.price*it.qty,0);
+      const total = coupon ? base * (1 - coupon.rate) : base;
+      document.getElementById('cartTotal').textContent = total.toFixed(2) + ' €';
+    }
+
+    // Newsletter (démo)
+    function subscribeNews(e){
+      e.preventDefault();
+      const mail = document.getElementById('newsEmail').value;
+      document.getElementById('newsResult').textContent = `Merci! ${mail} a été ajouté à la newsletter (démo).`;
+      e.target.reset();
+    }
+
+    // Contact (démo)
+    function contactSubmit(e){
+      e.preventDefault();
+      const name = document.getElementById('contactName').value;
+      document.getElementById('contactResult').textContent = `Merci ${name}, votre message a bien été envoyé (démo).`;
+      e.target.reset();
+    }
+  </script>
+    <script>
+    (function(){
+      const v = document.getElementById('heroVideo');
+      if(!v) return;
+  
+      // Lecture par défaut (autoplay) - tente de jouer immédiatement
+      v.play().catch(()=>{ /* silence si bloqué */ });
+  
+      // Autoplay only when visible (play/pause on scroll)
+      if('IntersectionObserver' in window){
+        const io = new IntersectionObserver((entries)=>{
+          entries.forEach(entry=>{
+            if(entry.isIntersecting && entry.intersectionRatio > 0.4){
+              v.play().catch(()=>{});
+            } else {
+              v.pause();
+            }
+          });
+        }, {threshold: [0.25, 0.5, 0.75]});
+        io.observe(v);
+      }
+    })();
+        
+    document.getElementById('checkoutMethod').addEventListener('change', function() {
+      const natcash = document.getElementById('natcashLink');
+      const Devfundme = document.getElementById('DevfundmeLink');
+      const paypal = document.getElementById('paypalLink');
+      natcash.style.display = this.value === 'Natcash' ? '' : 'none';
+      Devfundme.style.display = this.value === 'Devfundme' ? '' : 'none';
+      paypal.style.display = this.value === 'PayPal' ? '' : 'none';
+    });
+  </script>
+</body>
+</html>
